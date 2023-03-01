@@ -6,7 +6,7 @@ const logOutUser = require("../controllers/Users/logOutUser");
 
 const router = express.Router();
 
-router.get("/user", getUser);
+router.get("/", getUser);
 router.post("/register", registerUser);
 router.post("/login", logInUser);
 router.post("/logout", logOutUser);

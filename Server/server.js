@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+// const path = require("path");
 
 const router = require("./routers");
 
@@ -16,14 +17,21 @@ app.use(bodyParser.json({ extended: true }));
 app.use(cookieParser());
 app.use(express.json());
 
-app.use("/api", router);
-
 app.use(
   cors({
     credentials: true,
-    origin: `http://127.0.0.1:${PORT}`,
+    origin: true,
   })
 );
+
+app.use("/api", router);
+
+// if (process.env.ENVIRONMENT === "DEVELOPMENT") {
+//   app.use(express.static("../client/public"));
+//   app.get("/", (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "client", "public", "index.html"));
+//   });
+// }
 
 async function start() {
   try {

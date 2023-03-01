@@ -8,13 +8,14 @@ async function getTodos(req, res) {
     const payload = jwt.verify(req.cookies.token, secret);
     console.log("payload");
 
-    Todo.where({ user: new mongoose.Types.ObjectId(payload.id) }).find(
-      (err, Todo) => {
-        res.status(200).json(Todo);
-      }
-    );
+    const todos = await Todo.where({
+      user: new mongoose.Types.ObjectId(payload.id),
+    }).find({ Todo });
+    res.status(200).json(todos);
   } catch (err) {
-    res.status(400).json({ message: "Bad Request", error: err });
+    res
+      .status(401)
+      .json({ errMessage: "UnAuthorized .. login please", error: err });
   }
 }
 
