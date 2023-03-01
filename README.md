@@ -15,7 +15,7 @@
 - `cd simple-TODO-with-Auth/client`
 - `npm install`
 - `npm start`
-- Visit http://localhost:3000
+- Visit http://127.0.0.1:3000/
 
 * Server:
 - `cd simple-TODO-with-Auth/server`
