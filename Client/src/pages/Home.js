@@ -5,21 +5,27 @@ import {
   Grid,
   TextField,
   Button,
-  IconButton,
-  FormGroup,
   Divider,
+  Tab,
+  Tabs,
 } from "@mui/material";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { TabPanel, TabContext } from "@mui/lab";
 import Context from "../context/Context";
 import Loading from "../components/Loading";
+import AllTodo from "../components/AllTodo";
+import DoneTodo from "../components/DoneTodo";
+import ImportantTodo from "../components/ImportantTodo";
 
 function Home() {
   const userInfo = useContext(Context);
   const [inputVal, setInputVal] = useState("");
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [tabValue, setTabValue] = useState("All");
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   axios.defaults.withCredentials = true;
 
@@ -140,7 +146,7 @@ function Home() {
     <div>
       <Grid
         container
-        spacing={2}
+        spacing={1}
         direction="row"
         justifyContent="center"
         marginBottom="20px"
@@ -166,100 +172,42 @@ function Home() {
         </Grid>
       </Grid>
       <Divider />
-      <Box
-        alignItems="center"
-        sx={{
-          width: 1,
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "wrap",
-          gap: 3,
-        }}
-      >
-        {todos.length > 0 ? (
-          <>
-            {todos.map((todo) => (
-              <Box
-                alignItems="center"
-                justifyContent="space-between"
-                width="100%"
-                color={todo.important ? "red" : "blue"}
-                fontWeight={todo.done ? "bold" : "normal"}
-                sx={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 0.5,
-                }}
-              >
-                <p style={{ marginLeft: "25px" }}>
-                  {todo.done ? <del>{todo.text}</del> : todo.text}
-                </p>
-                <div key={todo._id}>
-                  <FormGroup
-                    sx={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      flexDirection: "row",
-                      gap: 0.1,
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <>
-                      <IconButton
-                        value="done"
-                        title={todo.done ? "set to undo" : "set to done"}
-                        onClick={(e) => {
-                          updateTodo(e, todo);
-                        }}
-                      >
-                        <CheckCircleIcon
-                          color={todo.done ? "success" : "error"}
-                          size="small"
-                        />
-                      </IconButton>
-                    </>
-                    <>
-                      <IconButton
-                        value="important"
-                        title={
-                          todo.important
-                            ? "set to not complete"
-                            : "set to complete"
-                        }
-                        onClick={(e) => {
-                          updateTodo(e, todo);
-                        }}
-                      >
-                        <AssignmentTurnedInIcon
-                          color={todo.important ? "success" : "error"}
-                          size="small"
-                        />
-                      </IconButton>
-                    </>
-                    <>
-                      <IconButton
-                        value={todo._id}
-                        title="delete"
-                        onClick={(e) => {
-                          deleteTodo(e, todo);
-                        }}
-                      >
-                        <DeleteIcon size="small" />
-                      </IconButton>
-                    </>
-                  </FormGroup>
-                </div>
-                <Divider style={{ width: "100%" }} />
-              </Box>
-            ))}
-          </>
-        ) : (
-          <>
-            {" "}
-            <h3>No Todos, Please add some todo</h3>
-          </>
-        )}
-      </Box>
+
+      <TabContext value={tabValue}>
+        <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            variant="fullWidth"
+            centered
+          >
+            <Tab label="All" value="All" />
+            <Tab label="Done" value="Done" />
+            <Tab label="Important" value="Important" />
+          </Tabs>
+        </Box>
+        <TabPanel value="All">
+          <AllTodo
+            todo={todos}
+            updateTodo={updateTodo}
+            deleteTodo={deleteTodo}
+          />
+        </TabPanel>
+        <TabPanel value="Done">
+          <DoneTodo
+            todo={todos}
+            updateTodo={updateTodo}
+            deleteTodo={deleteTodo}
+          />
+        </TabPanel>
+        <TabPanel value="Important">
+          <ImportantTodo
+            todo={todos}
+            updateTodo={updateTodo}
+            deleteTodo={deleteTodo}
+          />
+        </TabPanel>
+      </TabContext>
     </div>
   );
 }
