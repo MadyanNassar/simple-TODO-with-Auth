@@ -8,7 +8,12 @@ import {
   Divider,
   Tab,
   Tabs,
+  InputLabel,
+  MenuItem,
+  FormControl,
 } from "@mui/material";
+import Select from "@mui/material/Select";
+import FormHelperText from "@mui/material/FormHelperText";
 import { TabPanel, TabContext } from "@mui/lab";
 import Context from "../context/Context";
 import Loading from "../components/Loading";
@@ -22,6 +27,27 @@ function Home() {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tabValue, setTabValue] = useState("All");
+  const [filter, setFilter] = useState("");
+
+  const handleFilter = (event) => {
+    setFilter(event.target.value);
+    // todos.forEach(element => {
+    //   console.log(new Date(element.date))
+    // });
+    switch (event.target.value) {
+      case 0:
+        setTodos(todos.sort((a, b) => new Date(b.date) - new Date(a.date)));
+        break;
+      case 1:
+        setTodos(todos.sort((a, b) => b.done - a.done));
+        break;
+      case 2:
+        setTodos(todos.sort((a, b) => b.important - a.important));
+        break;
+      default:
+        setTodos(todos);
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -112,7 +138,6 @@ function Home() {
             return t;
           });
           setTodos([...newTodos]);
-          getTodos();
         });
     } catch (err) {
       console.log(err);
@@ -146,6 +171,7 @@ function Home() {
     <div>
       <Grid
         container
+        display="flex"
         spacing={1}
         direction="row"
         justifyContent="center"
@@ -170,6 +196,16 @@ function Home() {
             Add
           </Button>
         </Grid>
+      </Grid>
+      <Grid item sx={{ minWidth: 120 }}>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel>Filter</InputLabel>
+          <Select value={filter} label="filter *" onChange={handleFilter}>
+            <MenuItem value={0}>By Date</MenuItem>
+            <MenuItem value={1}>By Done</MenuItem>
+            <MenuItem value={2}>By Important</MenuItem>
+          </Select>
+        </FormControl>
       </Grid>
       <Divider />
 

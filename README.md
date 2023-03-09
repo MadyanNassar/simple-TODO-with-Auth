@@ -1,4 +1,7 @@
 # Simple MERN Todo App with login Authentication :
+
+# Next step :--> Styling
+
 * Features:
 
 - `Register : create a new account`
