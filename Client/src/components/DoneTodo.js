@@ -33,7 +33,6 @@ function DoneTodo(props) {
                       alignItems="center"
                       justifyContent="space-between"
                       width="100%"
-                      color={todo.important ? "red" : "blue"}
                       fontWeight={todo.done ? "bold" : "normal"}
                       sx={{
                         display: "flex",
